@@ -28,9 +28,9 @@ WORD_SEPARATORS=' '
 USE_SUFFIX_LEMMATIZER=True
 ```
 
-Setup an environment variable DI_CONFIG to point to the configuration file:
+Setup an environment variable LD_CONFIG to point to the configuration file:
 ```
-export DI_CONFIG=<full path to the configuration file>
+export LD_CONFIG=<full path to the configuration file>
 ```
 
 Extract PII entities:

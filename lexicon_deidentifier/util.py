@@ -13,17 +13,17 @@ log = logging.getLogger(__name__)
 def read_configuraton():
     """Reads configuration file defined by an environment variable CONFIG"""
     try:
-        config_file_name = os.environ['DI_CONFIG']
+        config_file_name = os.environ['LD_CONFIG']
     except KeyError as e:
-        print('Environment variable "DI_CONFIG" not defined.')
+        print('Environment variable "LD_CONFIG" not defined.')
         sys.exit(0)
     
     if not os.path.exists(config_file_name):
-        print('Environment variable "DI_CONFIG" points to a non-existent file "{}".'.format(config_file_name))
+        print('Environment variable "LD_CONFIG" points to a non-existent file "{}".'.format(config_file_name))
         sys.exit(0)
     
     log.debug('Configuration file: "{}"'.format(config_file_name))
-    log.debug('Settings:\n{}'.format(open(config_file_name).read()))
+    log.debug('Lexicon-Deidentifier settings:\n{}'.format(open(config_file_name).read()))
     
     config = configparser.ConfigParser()
     config.read(config_file_name)

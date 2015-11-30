@@ -11,21 +11,34 @@ from suffix_lemmatizer import SuffixLemmatizer
 
 from . import util
 
-
 log = logging.getLogger(__name__)
 
 PII = 'pii'
+default_dictionary = None
 
+
+def get_default_dictionary():
+    global default_dictionary
+    if default_dictionary is None:
+        default_dictionary = Dictionary.load_from_environment()
+    return default_dictionary
+    
 
 class Text(EstnltkText):
     
     
     def __init__(self, *args, **kwargs):
         super(Text, self).__init__(*args, **kwargs)
-        self.pii_dictionary = kwargs.get('pii_dictionary', 
-                                         Dictionary.load_from_environment())
-            
+        self.pii_dictionary = kwargs.get('pii_dictionary', get_default_dictionary())
         
+    
+    @cached_property
+    def layer_tagger_mapping(self):
+        mapping = super(Text, self).layer_tagger_mapping
+        mapping[PII] = self.tokenize_pii
+        return mapping
+    
+    
     @cached_property
     def pii(self):
         """ A list of personally identifiable information in `pii` layer """
@@ -122,7 +135,7 @@ class Dictionary(object):
         if not fnm.endswith('.voc'):
             fnm = fnm + '.voc'
         if not os.path.exists(fnm):
-            log.debug('File {}.voc not found. Runing transformation ...'.format(fnm))
+            log.debug('File {} not found. Running transformation ...'.format(fnm))
             util.transform_vocabulary()
         with codecs.open(fnm, encoding='utf8') as f:
             vocabulary = set(ln.rstrip() for ln in f)
@@ -139,9 +152,7 @@ class Dictionary(object):
             lemmas = [lemma.lower() for lemma in lemmas]
         
         if self.use_suffix_lemmatizer:
-            suf_lemmas = [self.suffix_lemmatizer(w) for w in text.word_texts]
-            if self.lower:
-                suf_lemmas = [lemma.lower() for lemma in suf_lemmas]
+            suf_lemmas = [self.suffix_lemmatizer(w.lower()) for w in text.word_texts]
         
         dicts = []
         for i in range(len(lemmas)):
@@ -156,8 +167,6 @@ class Dictionary(object):
                         suf_phrase = " ".join(suf_lemmas[i:j])
                         if suf_phrase != phrase and suf_phrase in self.vocabulary:
                             dicts.append({START: words[i][START], 
-                                  END: words[j-1][END],
-                                  TEXT:phrase})
+                                          END: words[j-1][END],
+                                          TEXT:phrase})
         text[PII] = dicts
-                    
-                    
