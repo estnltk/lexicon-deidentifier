@@ -1,6 +1,7 @@
 # lexicon-deidentifier
 Lexicon-deidentifier provides a wrapper over the Estnltk's Text class, 
-which extracts personally identifiable information (PII) from text. 
+which extracts personally identifiable information (PII) from text based on
+user-provided lexicon.
 
 ## Installation
 ```
@@ -10,17 +11,18 @@ python setup.py install
 ```
 
 ##Usage
-Create a file listing PII entities, e.g.
+Create a catalog containing files names.txt and settings.conf
+
+`names.txt` file format:
 ```
 first_name last_name
 tõnu tamm
 tõnu *
 ```
 
-Edit a configuration file settings.conf:
+`settings.conf` file format:
 ```
 [DICTIONARY]
-FILE=<full path to the PII file>
 LOOK_AHEAD=3
 LOWER_CASE=True
 FLIP_WORDS=False
@@ -28,12 +30,12 @@ WORD_SEPARATORS=' '
 USE_SUFFIX_LEMMATIZER=True
 ```
 
-Setup an environment variable LD_CONFIG to point to the configuration file:
+Setup an environment variable `LD_CONFIG` to point to the configuration catalog:
 ```
-export LD_CONFIG=<full path to the configuration file>
+export LD_CONFIG=<full path to the configuration catalog>
 ```
 
-Extract PII entities:
+Extract PII entities using estnltk-like interface:
 ```python
 > from lexicon_deidentifier import Text
 > text = Text(u'Tõnu Tamm lause alguses ja lõpus Tõnu')

@@ -119,15 +119,11 @@ class Dictionary(object):
     
     @staticmethod
     def load_from_environment():
-        config = util.read_configuraton()
-        look_ahead = config.getint('DICTIONARY', 'LOOK_AHEAD')
-        lower = config.getboolean('DICTIONARY', 'LOWER_CASE')
-        dict_file_name = config.get('DICTIONARY', 'FILE')
-        use_suffix_lemmatizer=config.getboolean('DICTIONARY', 'USE_SUFFIX_LEMMATIZER')
-        return Dictionary(vocabulary=dict_file_name, 
-                          look_ahead=look_ahead, 
-                          lower=lower,
-                          use_suffix_lemmatizer=use_suffix_lemmatizer)
+        c = util.read_configuraton()
+        return Dictionary(vocabulary=c.FILE, 
+                          look_ahead=c.LOOK_AHEAD, 
+                          lower=c.LOWER_CASE,
+                          use_suffix_lemmatizer=c.USE_SUFFIX_LEMMATIZER)
     
     
     @staticmethod
