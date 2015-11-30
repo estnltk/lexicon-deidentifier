@@ -1,5 +1,6 @@
 # lexicon-deidentifier
-Estnltk-deidentifier provides a wrapper over the Estnltk's Text class, which extracts personally identifiable information (PII) from text. 
+Lexicon-deidentifier provides a wrapper over the Estnltk's Text class, 
+which extracts personally identifiable information (PII) from text. 
 
 ## Installation
 ```
@@ -27,9 +28,9 @@ WORD_SEPARATORS=' '
 USE_SUFFIX_LEMMATIZER=True
 ```
 
-Setup an environment variable CONFIG to point to the configuration file:
+Setup an environment variable DI_CONFIG to point to the configuration file:
 ```
-export CONFIG=<full path to the configuration file>
+export DI_CONFIG=<full path to the configuration file>
 ```
 
 Extract PII entities:
