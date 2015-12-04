@@ -7,7 +7,7 @@ user-provided lexicon.
 ```
 git clone https://github.com/estnltk/lexicon-deidentifier.git
 cd lexicon-deidentifier
-python setup.py install
+pip install -r requirements.txt
 ```
 
 ##Usage
