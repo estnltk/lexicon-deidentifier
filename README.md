@@ -15,9 +15,9 @@ Create a catalog containing files names.txt and settings.conf
 
 `names.txt` file format:
 ```
-first_name last_name
-tõnu tamm
-tõnu *
+first_name,last_name
+tõnu,tamm
+tõnu,*
 ```
 
 `settings.conf` file format:

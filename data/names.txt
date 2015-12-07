@@ -1,4 +1,4 @@
-first_name last_name
-tõnu tamm
-tõnu *
-alexander *
+first_name,last_name
+tõnu,tamm
+tõnu,*
+alexander,*

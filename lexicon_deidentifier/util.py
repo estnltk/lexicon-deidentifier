@@ -59,7 +59,7 @@ def transform_vocabulary():
     
     log.debug('Converting dictionary file "{}" to "{}"'.format(c.FILE, outf.name))
     
-    reader = unicodecsv.reader(open(c.FILE, 'rb'), delimiter=' ', encoding='utf-8')
+    reader = unicodecsv.reader(open(c.FILE, 'rb'), delimiter=',', encoding='utf-8')
     reader.next()
     for row in reader:
         first_name = row[0] 
