@@ -6,7 +6,7 @@ import logging
 from six import string_types
 from cached_property import cached_property
 from estnltk import Text as EstnltkText
-from estnltk.names import *
+from estnltk.names import START, END, TEXT
 from suffix_lemmatizer import SuffixLemmatizer
 
 from . import util
@@ -29,7 +29,7 @@ class Text(EstnltkText):
     
     def __init__(self, *args, **kwargs):
         super(Text, self).__init__(*args, **kwargs)
-        self.pii_dictionary = kwargs.get('pii_dictionary', get_default_dictionary())
+        self.pii_dictionary = kwargs.get('pii_dictionary') or get_default_dictionary()
         
     
     @cached_property
@@ -117,17 +117,17 @@ class Dictionary(object):
             raise ValueError('Invalid vocabulary type: "{}"'.format(type(vocabulary)))
     
     
-    @staticmethod
-    def load_from_environment():
+    @classmethod
+    def load_from_environment(cls):
         c = util.read_configuraton()
-        return Dictionary(vocabulary=c.FILE, 
-                          look_ahead=c.LOOK_AHEAD, 
-                          lower=c.LOWER_CASE,
-                          use_suffix_lemmatizer=c.USE_SUFFIX_LEMMATIZER)
+        return cls(vocabulary=c.FILE, 
+                   look_ahead=c.LOOK_AHEAD, 
+                   lower=c.LOWER_CASE,
+                   use_suffix_lemmatizer=c.USE_SUFFIX_LEMMATIZER)
     
     
-    @staticmethod
-    def load_transform_vocabulary(fnm):
+    @classmethod
+    def load_transform_vocabulary(cls, fnm):
         if not fnm.endswith('.voc'):
             fnm = fnm + '.voc'
         if not os.path.exists(fnm):
@@ -152,12 +152,13 @@ class Dictionary(object):
         
         dicts = []
         for i in range(len(lemmas)):
-            for j in range(i + 1, min(i + 1 + look_ahead, len(lemmas) + 1)):
+            for j in range(min(i + look_ahead, len(lemmas)), i, -1):
                 phrase = " ".join(lemmas[i:j])
                 if phrase in self.vocabulary:
                     dicts.append({START: words[i][START], 
                                   END: words[j-1][END],
                                   TEXT:phrase})
+                    break
                 else:
                     if self.use_suffix_lemmatizer:
                         suf_phrase = " ".join(suf_lemmas[i:j])
@@ -165,4 +166,5 @@ class Dictionary(object):
                             dicts.append({START: words[i][START], 
                                           END: words[j-1][END],
                                           TEXT:phrase})
+                            break
         text[PII] = dicts
